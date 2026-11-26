@@ -15,6 +15,9 @@ const SECURITY_HEADERS = [
 const nextConfig: NextConfig = {
   // Enables `use cache` + cacheLife for the hourly air quality data.
   cacheComponents: true,
+  // Required alongside cacheComponents since Next 16.4. Safe here: no <Link prefetch>
+  // and no params/searchParams in pages, so links just prefetch the static App Shell.
+  partialPrefetching: true,
   poweredByHeader: false,
   async headers() {
     return [{ source: "/:path*", headers: SECURITY_HEADERS }];

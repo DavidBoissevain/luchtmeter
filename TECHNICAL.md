@@ -10,7 +10,7 @@ This file tracks the major technical details and decisions for Luchtmeter. Add n
 - Recharts for charts.
 - MapLibre GL JS through [mapcn](https://www.mapcn.dev/) (`components/ui/map.tsx`), with OpenFreeMap basemaps (#5).
 - next-themes for light and dark mode (the `dark` class on `<html>`).
-- Next.js Cache Components (`cacheComponents: true`) for caching the station data (#20).
+- Next.js Cache Components (`cacheComponents: true`) for caching the station data (#20), with `partialPrefetching: true` (#56).
 - Supabase (Postgres) for data and the hourly collector. The project is "Luchtmeter" (`uoocwxpfujiwfrhkkskb`, region eu-west-1, Ireland). The site is hosted on Vercel.
 
 ## Data sources
@@ -294,6 +294,7 @@ With Supabase's 500 MB free tier, store only the needed quantities and keep **30
 
 | 54 | 2026-10-14 | A settings button (gear) sits left of the ⓘ button at the bottom right of the map and opens "Instellingen" ([settings-dialog.tsx](components/air/settings-dialog.tsx)): a pane on the left lists the sections with an icon each ("Algemeen" first; a row on top below `md`), and the right shows that section's settings as rows (label and description left, control right). The first setting, "Waarde tonen waar je klikt" (Algemeen › Kaart), turns on the popup with RIVM's value when you click next to the dots (amends #26, #36). It's **off by default**; with it off, a map click only closes an open popup. The choice is remembered per viewer in `localStorage` ([hooks/use-click-value.ts](hooks/use-click-value.ts), key `luchtmeter:click-value`). A searched place in the annual view still gets its popup (#45). | Decided | The user asked for it, with the setting off by default. New sections go in `SECTIONS` in the dialog. |
 | 55 | 2026-10-14 | On phones (below `sm`) the map credits are one short line, "© OpenStreetMap · RIVM" (plus the year in the annual view), that opens to the full credits with a tap (`MapCredits` in [air-map.tsx](components/air/air-map.tsx)). From `sm` up the full credits always show. | Decided | The full credits took two lines across the bottom of a phone screen. OpenStreetMap's credit must stay visible on the map, so the line doesn't fold away entirely. Luchtmeetnet and Samen Meten are credited with links in the ⓘ dialog. |
+| 56 | 2026-11-26 | Upgrade to Next.js 16.4.5 (and `eslint-config-next` 16.4.5) to fix the critical Next.js advisories; `npm audit fix` cleared the rest (0 vulnerabilities). Since 16.4, `cacheComponents` needs an explicit `partialPrefetching`; set it to `true`. | Decided | No `<Link prefetch>` and no `params`/`searchParams` in pages, and every page is static, so links keep prefetching the whole page. `true` becomes the only behaviour in Next 17. |
 
 ## Database schema
 
